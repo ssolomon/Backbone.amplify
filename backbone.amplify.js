@@ -105,13 +105,21 @@ amplifySync = function(method, model, options, error) {
 
 Backbone.sync = function(method, model, options) { 
   
+  var success = false;
+  
   if(typeof(model.localStorage) !== 'undefined' || 
       (typeof(model.collection) !== 'undefined' && typeof(model.collection.localStorage) !== 'undefined'))
   {
-     return amplifySync(method, model, options);
+     success = amplifySync(method, model, options);
+  } else {
+     success = true;
   }
-  else
+  
+  if(navigator.onLine === true && success)
   {
-    return defaultSync(method, model, options);
+    success = defaultSync(method, model, options);
   }
+  
+  return success;
+  
 };
